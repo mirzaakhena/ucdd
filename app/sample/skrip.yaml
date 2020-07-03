@@ -1,0 +1,47 @@
+packagePath: bitbucket.org/kfc/loyaltyengine
+
+domains:
+- name: point
+  usecases:
+  - name: addingpoint
+    outports:
+    - name: IsUserAlreadyHasPointBalance
+      requestFields:
+      - name: UserID
+        dataType: string
+      responseFields:
+      - name: YesItHas
+        dataType: bool      
+
+    - name: SetPointBalanceForUser
+      requestFields:
+      - name: UserID
+        dataType: string    
+      - name: Point
+        dataType: string 
+      - name: PointBalance
+        dataType: string    
+      - name: EventState
+        dataType: string
+      - name: ExtendInfo
+        dataType: string
+      responseFields:
+      - name: PointBalanceID
+        dataType: string       
+
+    - name: GetGlobalInitialPoint
+      requestFields:
+      responseFields:
+      - name: Point
+        dataType: int
+    
+    inports:
+      requestFields:
+      - name: UserID
+        dataType: string  
+      - name: CurrentPoint
+        dataType: int            
+      responseFields:
+      - name: PointBalanceID
+        dataType: string      
+

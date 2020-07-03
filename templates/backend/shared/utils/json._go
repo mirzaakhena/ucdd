@@ -1,0 +1,9 @@
+package utils
+
+import "encoding/json"
+
+// GetJSON is
+func GetJSON(x interface{}) string {
+	y, _ := json.Marshal(x)
+	return string(y)
+}

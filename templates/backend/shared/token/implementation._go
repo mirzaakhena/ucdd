@@ -1,0 +1,71 @@
+package token
+
+import (
+	"fmt"
+	"time"
+
+	jwt "github.com/dgrijalva/jwt-go"
+)
+
+// jwtToken is
+type jwtToken struct {
+	secretKey []byte
+}
+
+// jwtObject is
+type jwtObject struct {
+	jwt.StandardClaims
+	ExtendData interface{} `json:"extendData"`
+}
+
+// GenerateToken is
+func (j *jwtToken) GenerateToken(subject string, extendData interface{}, expiredInHour uint) string {
+	t := time.Now().UTC()
+	claims := &jwtObject{
+		ExtendData: extendData,
+		StandardClaims: jwt.StandardClaims{
+			Subject:   subject,
+			Issuer:    "system",
+			Audience:  "system",
+			IssuedAt:  t.Unix(),
+			ExpiresAt: t.Add(time.Duration(expiredInHour) * time.Hour).Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, _ := token.SignedString(j.secretKey)
+	return tokenString
+}
+
+// ValidateToken is
+func (j *jwtToken) ValidateToken(subject, tokenString string) interface{} {
+
+	token, err := jwt.ParseWithClaims(tokenString, &jwtObject{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return j.secretKey, nil
+	})
+
+	if err != nil {
+		return nil
+	}
+
+	claims, ok := token.Claims.(*jwtObject)
+	if !ok {
+		// invalid token
+		return nil
+	}
+
+	// expired check
+
+	if !token.Valid {
+		return nil
+	}
+
+	if claims.Subject != subject {
+		// wrong subject
+		return nil
+	}
+
+	return claims.ExtendData
+}
