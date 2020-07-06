@@ -2,22 +2,23 @@ package model
 
 // ThePackage is root of application definition
 type ThePackage struct {
-	ApplicationName string      ``                   // name of application
-	PackagePath     string      `yaml:"packagePath"` // golang path of application
-	Domains         []TheDomain `yaml:"domains"`     // list of domain used in this apps
+	ApplicationName string ``                   // name of application
+	PackagePath     string `yaml:"packagePath"` // golang path of application
+	// Domains         []TheDomain  `yaml:"domains"`     // list of domain used in this apps
+	Usecases []TheUsecase `yaml:"usecases"` // list of usecases
 }
 
 // TheDomain is
 type TheDomain struct {
-	Name     string       `yaml:"name"`     // name of domain
-	Usecases []TheUsecase `yaml:"usecases"` // list of usecases
+	Name string `yaml:"name"` // name of domain
+
 }
 
 // TheUsecase is
 type TheUsecase struct {
 	Name     string       `yaml:"name"`     // name of usecase
 	Outports []TheOutport `yaml:"outports"` // name of usecase
-	Inports  TheInport    `yaml:"inports"`  // name of usecase
+	Inport   TheInport    `yaml:"inport"`   // name of usecase
 }
 
 // TheInport is

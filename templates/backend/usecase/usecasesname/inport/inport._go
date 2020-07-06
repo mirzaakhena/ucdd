@@ -1,0 +1,22 @@
+package inport
+
+import (
+	"context"
+
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
+)
+
+// {{PascalCase .Name}}Inport ...
+type {{PascalCase .Name}}Inport interface {
+	Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, dto {{PascalCase .Name}}Request) (*{{PascalCase .Name}}Response, error)
+}
+
+// {{PascalCase .Name}}Request ...
+type {{PascalCase .Name}}Request struct { {{range .Inport.RequestFields}}
+	{{PascalCase .Name}} {{.DataType}} {{end}}
+}
+
+// {{PascalCase .Name}}Response ...
+type {{PascalCase .Name}}Response struct { {{range .Inport.ResponseFields}}
+	{{PascalCase .Name}} {{.DataType}} {{end}}
+}

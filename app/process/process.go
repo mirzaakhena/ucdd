@@ -37,6 +37,177 @@ func RunProcess(file string) {
 
 	fmt.Printf("%v\n", utils.GetJSON(tp))
 
+	for _, usecase := range tp.Usecases {
+
+		// INPORT
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport", tp.PackagePath, strings.ToLower(usecase.Name))
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/inport/inport._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport/inport.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
+		}
+
+		// OUTPORT
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport", tp.PackagePath, strings.ToLower(usecase.Name))
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/outport/outport._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/outport.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
+		}
+
+		// INTERACTOR
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor", tp.PackagePath, strings.ToLower(usecase.Name))
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/interactor/interactor._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/interactor.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
+		}
+
+		// CONTROLLER
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/controller/restapi", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/controller/restapi/restapi._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/controller/restapi/request._http")
+				outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/request.http", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+		}
+
+		// DOMAIN
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/domain", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+		}
+
+		// REAL
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/datasource/real", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/datasource/real/datasource._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/datasource/real/%s_outport.go", tp.PackagePath, SnakeCase(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
+
+		}
+
+		// MOCKS
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/datasource/mocks", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+		}
+
+		// TRANSACTION
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/shared/transaction", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/contract._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/contract.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/implementation._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/implementation.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/public._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+		}
+
+		// LOG
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/shared/log", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/log/contract._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/contract.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/log/implementation._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/implementation.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/log/public._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+		}
+
+		// CONFIG
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/shared/config", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/config/contract._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/config/contract.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/config/implementation._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/config/implementation.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/config/public._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/config/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+		}
+
+		// MAIN
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/app", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/app/main._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/app/main.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+		}
+
+	}
+
 	// single directory generated
 	{
 		// makeBackendDirectory(&tp)

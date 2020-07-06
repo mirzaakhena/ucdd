@@ -1,6 +1,8 @@
 package transaction
 
+import "github.com/jinzhu/gorm"
+
 // NewTransactionDB is
-func NewTransactionDB(db interface{}) Transaction {
-	return &transaction{DB: extractDB(db)}
+func NewTransactionDB(DB *gorm.DB) Transaction {
+	return &GormTransactionImpl{DB: DB}
 }

@@ -1,0 +1,24 @@
+package outport
+
+import (
+	"context"
+
+	"{{PackagePath}}/backend/shared/transaction"
+)
+
+// {{PascalCase .Name}}Outport ...
+type {{PascalCase .Name}}Outport interface {
+	transaction.Transaction {{range .Outports}}
+	{{PascalCase .Name}}(ctx context.Context, req {{PascalCase .Name}}Request) (*{{PascalCase .Name}}Response, error) {{end}}
+}
+{{range .Outports}}
+// {{PascalCase .Name}}Request ...
+type {{PascalCase .Name}}Request struct { {{range .RequestFields}}
+	{{PascalCase .Name}} {{.DataType}} {{end}}
+}
+
+// {{PascalCase .Name}}Response ...
+type {{PascalCase .Name}}Response struct { {{range .ResponseFields}}
+	{{PascalCase .Name}} {{.DataType}} {{end}}
+} {{end}}
+

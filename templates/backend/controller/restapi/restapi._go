@@ -1,0 +1,36 @@
+package restapi
+
+import (
+	"context"
+	"net/http"
+
+	"{{PackagePath}}/backend/shared/log"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
+	"github.com/gin-gonic/gin"
+)
+
+// {{PascalCase .Name}}API ...
+func {{PascalCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport, outputPort outport.{{PascalCase .Name}}Outport) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		var req inport.{{PascalCase .Name}}Request
+
+		if err := c.BindJSON(&req); err != nil {
+			c.JSON(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		log.Info("CreateAccount %v", req)
+
+		res, err := inputPort.Handle(context.Background(), outputPort, req)
+		if err != nil {
+			log.Error("%v", err.Error())
+			c.JSON(http.StatusBadRequest, err.Error())
+			return
+		}
+		c.JSON(http.StatusOK, res)
+
+	}
+}

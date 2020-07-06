@@ -32,6 +32,8 @@ func makeBackendDirectory(tp *model.ThePackage) {
 	dir = fmt.Sprintf("../../../../%s/backend/domain/domain-name/usecase/model", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
+	// ====================================================================================================
+
 	dir = fmt.Sprintf("../../../../%s/backend/shared/utils", tp.PackagePath)
 	os.MkdirAll(dir, 0777)
 
