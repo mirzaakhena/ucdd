@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/mirzaakhena/common/utils"
 	"github.com/mirzaakhena/ucdd/app/model"
 	"gopkg.in/yaml.v2"
 )
@@ -35,7 +34,7 @@ func RunProcess(file string) {
 		tp.ApplicationName = s[len(s)-1]
 	}
 
-	fmt.Printf("%v\n", utils.GetJSON(tp))
+	// fmt.Printf("%v\n", utils.GetJSON(tp))
 
 	for _, usecase := range tp.Usecases {
 
@@ -70,7 +69,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/interactor/interactor._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/interactor.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/%s.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -188,6 +187,12 @@ func RunProcess(file string) {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/shared/config/public._go")
 				outputFile := fmt.Sprintf("../../../../%s/backend/shared/config/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/config._toml")
+				outputFile := fmt.Sprintf("../../../../%s/backend/config.toml", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 

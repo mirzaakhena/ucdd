@@ -14,11 +14,11 @@ type {{PascalCase .Name}}Outport interface {
 {{range .Outports}}
 // {{PascalCase .Name}}Request ...
 type {{PascalCase .Name}}Request struct { {{range .RequestFields}}
-	{{PascalCase .Name}} {{.DataType}} {{end}}
+	{{PascalCase .}} string {{end}}
 }
 
 // {{PascalCase .Name}}Response ...
 type {{PascalCase .Name}}Response struct { {{range .ResponseFields}}
-	{{PascalCase .Name}} {{.DataType}} {{end}}
+	{{PascalCase .}} string {{end}}
 } {{end}}
 

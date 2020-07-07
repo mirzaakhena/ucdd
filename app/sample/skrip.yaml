@@ -3,82 +3,84 @@ packagePath: bitbucket.org/kfc/loyaltyengine2
 usecases:
 
 #----------------------------
-- name: InitPoint
-  #----INPORT--------
+- name: RegistrationInitialPoint
   inport: 
-    #----REQ--------
-    requestFields:
-    - name: UserID
-      dataType: string
-    - name: CurrentPoint
-      dataType: int
-    #----RES--------      
-    responseFields:
-    - name: PointBalanceID
-      dataType: string
-  #----OUTPORT-------- 
-  outports:
-  - name: IsUserAlreadyHasPointBalance
-    #----REQUEST--------  
-    requestFields:
-    - name: UserID
-      dataType: string
-    #----RESPONSE--------
-    responseFields:
-    - name: YesItHas
-      dataType: bool
-  - name: SetPointBalanceForUser
-    #----REQUEST--------
-    requestFields:
-    - name: UserID
-      dataType: string
-    - name: Point
-      dataType: string 
-    - name: PointBalance
-      dataType: string
-    - name: EventState
-      dataType: string
-    - name: ExtendInfo
-      dataType: string
-    #----RESPONSE--------
-    responseFields:
-    - name: PointBalanceID
-      dataType: string
+    requestFields: [UserID]
+    responseFields: [UserPointID]
 
-#----------------------------      
-- name: CompleteOrder
-  #----INPORT--------
+  outports:
+  - name: IsAlreadyHasUserPoint
+    requestFields: [UserID]    
+    responseFields: [YesItHas]
+
+  - name: GetInitialPoint
+    requestFields:
+    responseFields: [Point]
+
+  - name: CreateUserPoint
+    requestFields: [UserID, Point, PointBalance, EventState, Description]
+    responseFields: [UserPointID]
+    
+#----------------------------    
+- name: OrderCompletePoint
   inport:
-    requestFields:
-    - name: UserID
-      dataType: string
-    - name: CurrentPoint
-      dataType: int
-    responseFields:
-    - name: PointBalanceID
-      dataType: string
-  #----OUTPORT--------       
-  outports:
-  - name: IsUserAlreadyHasPointBalance
-    requestFields:
-    - name: UserID
-      dataType: string
-    responseFields:
-    - name: YesItHas
-      dataType: bool
-  - name: SetPointBalanceForUser
-    requestFields:
-    - name: UserID
-      dataType: string
-    - name: Point
-      dataType: string 
-    - name: PointBalance
-      dataType: string
-    - name: EventState
-      dataType: string
-    - name: ExtendInfo
-      dataType: string
-    responseFields:
-    - name: PointBalanceID
-      dataType: string      
+    requestFields: [UserID, OrderAmount, OrderID]
+    responseFields: [UserPointID]
 
+  outports:
+  - name: GetPointByOrderAmount
+    requestFields: [OrderAmount]
+    responseFields: [Point]
+    
+  - name: GetLastUserPoint
+    requestFields: [UserID]
+    responseFields: [UserPoint]
+
+  - name: CreateUserPoint
+    requestFields: [UserID, Point, PointBalance, EventState, Description]
+    responseFields: [UserPointID]    
+
+
+#----------------------------    
+- name: EarnVoucherByPoint
+  inport:
+    requestFields: [UserID, VoucherID]
+    responseFields: [ UserPointID]
+
+  outports:
+  - name: GetLastUserPoint
+    requestFields: [UserID]
+    responseFields: [UserPoint]
+
+  - name: GetPointRequired
+    requestFields: [VoucherID]
+    responseFields: [Point]
+  
+  - name: BuyVoucher
+    requestFields: [VoucherID]
+    responseFields: [VoucherOrderID]
+
+  - name: CreateUserPoint
+    requestFields: [UserPointObject]
+    responseFields: [UserPointID]
+
+
+- name: ExpiringUserPoint
+  inport:
+    requestFields: [UserID]
+    responseFields: [UserPointID]
+
+  outports:
+  - name: GetLastUserPointExpired
+    requestFields: [UserID]
+    responseFields: [ExpireUserPoint]
+  
+  - name: CreateUserPointExpired
+    requestFields: [ExpireUserPointObject]
+    responseFields: [UserPointExpiredID]
+
+  - name: CreateUserPoint
+    requestFields: [UserPointObject]
+    responseFields: [UserPointID]
+  
+    

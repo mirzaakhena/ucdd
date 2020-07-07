@@ -13,10 +13,10 @@ type {{PascalCase .Name}}Inport interface {
 
 // {{PascalCase .Name}}Request ...
 type {{PascalCase .Name}}Request struct { {{range .Inport.RequestFields}}
-	{{PascalCase .Name}} {{.DataType}} {{end}}
+	{{PascalCase .}} string {{end}}
 }
 
 // {{PascalCase .Name}}Response ...
 type {{PascalCase .Name}}Response struct { {{range .Inport.ResponseFields}}
-	{{PascalCase .Name}} {{.DataType}} {{end}}
+	{{PascalCase .}} string {{end}}
 }

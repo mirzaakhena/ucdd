@@ -25,3 +25,5 @@ https://github.com/golang-standards/project-layout
 https://github.com/golang/go/wiki/Modules
 https://www.soberkoder.com/go-gorm-logging/
 https://github.com/vektra/mockery
+
+mockery -all -output backend/datasource/mocks -dir backend/usecase/initpoint/contract/outport/

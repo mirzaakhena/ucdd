@@ -2,16 +2,9 @@ package model
 
 // ThePackage is root of application definition
 type ThePackage struct {
-	ApplicationName string ``                   // name of application
-	PackagePath     string `yaml:"packagePath"` // golang path of application
-	// Domains         []TheDomain  `yaml:"domains"`     // list of domain used in this apps
-	Usecases []TheUsecase `yaml:"usecases"` // list of usecases
-}
-
-// TheDomain is
-type TheDomain struct {
-	Name string `yaml:"name"` // name of domain
-
+	ApplicationName string       ``                   // name of application
+	PackagePath     string       `yaml:"packagePath"` // golang path of application
+	Usecases        []TheUsecase `yaml:"usecases"`    // list of usecases
 }
 
 // TheUsecase is
@@ -23,25 +16,13 @@ type TheUsecase struct {
 
 // TheInport is
 type TheInport struct {
-	RequestFields  []TheRequestField  `yaml:"requestFields"`  //
-	ResponseFields []TheResponseField `yaml:"responseFields"` //
+	RequestFields  []string `yaml:"requestFields"`  //
+	ResponseFields []string `yaml:"responseFields"` //
 }
 
 // TheOutport is
 type TheOutport struct {
-	Name           string             `yaml:"name"`           // name of outport
-	RequestFields  []TheRequestField  `yaml:"requestFields"`  //
-	ResponseFields []TheResponseField `yaml:"responseFields"` //
-}
-
-// TheRequestField is
-type TheRequestField struct {
-	Name     string `yaml:"name"`     // name of outport
-	DataType string `yaml:"dataType"` // name of outport
-}
-
-// TheResponseField is
-type TheResponseField struct {
-	Name     string `yaml:"name"`     // name of outport
-	DataType string `yaml:"dataType"` // name of outport
+	Name           string   `yaml:"name"`           // name of outport
+	RequestFields  []string `yaml:"requestFields"`  //
+	ResponseFields []string `yaml:"responseFields"` //
 }
