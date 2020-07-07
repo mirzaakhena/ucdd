@@ -20,7 +20,7 @@ func main() {
 
 	cf := config.NewDefaultConfig("$GOPATH/src/{{PackagePath}}/backend", "config")
 
-	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", {{AppName}}), cf.GetInt("log.max_age", 14))
+	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
 
 	log.Info("Apps is start running")
 
