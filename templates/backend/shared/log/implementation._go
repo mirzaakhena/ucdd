@@ -2,6 +2,8 @@ package log
 
 import (
 	"fmt"
+	"runtime"
+	"strings"
 	"sync"
 	"time"
 
@@ -54,6 +56,7 @@ func getLogImpl() Logger {
 		))
 
 	})
+
 	return &defaultLogger
 }
 
@@ -61,40 +64,50 @@ type logrusImpl struct {
 	theLogger *logrus.Logger
 }
 
+func getFunctionCall() string {
+	pc, _, line, ok := runtime.Caller(3)
+	if !ok {
+		return ""
+	}
+	funcName := runtime.FuncForPC(pc).Name()
+	x := strings.LastIndex(funcName, "/")
+	return fmt.Sprintf("%s:%d", funcName[x+1:], line)
+}
+
 var defaultLogger logrusImpl
 
 func (x *logrusImpl) Debug(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Debug(message)
+	x.theLogger.WithField("func", getFunctionCall()).WithField("func", getFunctionCall()).Debug(message)
 	return message
 }
 
 func (x *logrusImpl) Info(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Info(message)
+	x.theLogger.WithField("func", getFunctionCall()).Info(message)
 	return message
 }
 
 func (x *logrusImpl) Warn(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Warn(message)
+	x.theLogger.WithField("func", getFunctionCall()).Warn(message)
 	return message
 }
 
 func (x *logrusImpl) Error(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Error(message)
+	x.theLogger.WithField("func", getFunctionCall()).Error(message)
 	return message
 }
 
 func (x *logrusImpl) Fatal(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Fatal(message)
+	x.theLogger.WithField("func", getFunctionCall()).Fatal(message)
 	return message
 }
 
 func (x *logrusImpl) Panic(description string, args ...interface{}) string {
 	message := fmt.Sprintf(description, args...)
-	x.theLogger.Panic(message)
+	x.theLogger.WithField("func", getFunctionCall()).Panic(message)
 	return message
 }

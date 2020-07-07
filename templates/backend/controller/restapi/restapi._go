@@ -22,7 +22,7 @@ func {{PascalCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport, output
 			return
 		}
 
-		log.Info("CreateAccount %v", req)
+		log.Info("%v", req)
 
 		res, err := inputPort.Handle(context.Background(), outputPort, req)
 		if err != nil {
