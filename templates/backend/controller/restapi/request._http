@@ -1,6 +1,5 @@
 {{range .Usecases}}
 POST http://localhost:8080/{{LowerCase .Name}}
-
 { {{range .Inport.RequestFields}}
   "{{PascalCase .Name}}": "",{{end}}
 } 

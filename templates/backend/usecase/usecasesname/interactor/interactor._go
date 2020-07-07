@@ -17,5 +17,5 @@ type {{CamelCase .Name}}Usecase struct {
 
 func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, dto inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
 
-	return nil, nil
+	return &inport.{{PascalCase .Name}}Response{}, nil
 }
