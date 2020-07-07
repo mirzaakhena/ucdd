@@ -1,0 +1,41 @@
+package interactor
+
+import (
+	"context"
+	"testing"
+
+	"{{PackagePath}}/backend/datasource/mocks"
+	"{{PackagePath}}/backend/usecase/earnvoucherbypoint/inport"
+	"{{PackagePath}}/backend/usecase/earnvoucherbypoint/outport"
+	"github.com/stretchr/testify/assert"
+)
+
+func Test_Normal(t *testing.T) {
+
+	ctx := context.Background()
+
+	dbCtx := context.Background()
+
+	req := inport.{{PascalCase .Name}}Request{}
+
+	outputPort := mocks.{{PascalCase .Name}}Outport{}
+
+	outputPort.On("GetDB", ctx, true).Return(dbCtx)
+
+	outputPort.On("RollbackTransactionOnException", dbCtx).Return(nil)
+
+	outputPort.On("CommitTransaction", dbCtx).Return(nil)
+
+  {{range .Outports}}
+	outputPort.On("{{PascalCase .Name}}", dbCtx, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}
+		{{PascalCase .}}: "", {{end}}
+	}).Return(nil, nil) 
+  {{end}}
+  
+	res, err := New{{PascalCase .Name}}Inport().Handle(ctx, &outputPort, req)
+
+	assert.Nil(t, err)
+
+	assert.Equal(t, &inport.{{PascalCase .Name}}Response{}, res)
+
+}

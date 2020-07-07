@@ -72,6 +72,12 @@ func RunProcess(file string) {
 				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/%s.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/interactor/interactor_test._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/%s_normal_test.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
+			}
 		}
 
 		// CONTROLLER
@@ -211,6 +217,8 @@ func RunProcess(file string) {
 
 		}
 
+		generateMock(tp.PackagePath, usecase.Name)
+
 	}
 
 	// single directory generated
@@ -238,10 +246,20 @@ func RunProcess(file string) {
 
 	// fmt.Printf(">>>>> done Run\n")
 
-	// goFormat(tp.PackagePath)
+	goFormat(tp.PackagePath)
 
-	// goGet()
+	goGet()
 
+}
+
+func generateMock(packagePath, usecaseName string) {
+	fmt.Printf("mockery %s", usecaseName)
+	cmd := exec.Command("mockery", "-all", "-case", "snake", "-output", fmt.Sprintf("../../../../%s/backend/datasource/mocks/", packagePath), "-dir", fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/", packagePath, strings.ToLower(usecaseName)))
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
 }
 
 // do go format
