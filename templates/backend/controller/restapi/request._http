@@ -1,5 +1,7 @@
 {{range .Usecases}}
 POST http://localhost:8080/{{LowerCase .Name}}
+Content-Type: application/json
+
 { {{range .Inport.RequestFields}}
   "{{PascalCase .}}": "",{{end}}
 } 

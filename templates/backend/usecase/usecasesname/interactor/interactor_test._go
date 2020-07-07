@@ -5,8 +5,9 @@ import (
 	"testing"
 
 	"{{PackagePath}}/backend/datasource/mocks"
-	"{{PackagePath}}/backend/usecase/earnvoucherbypoint/inport"
-	"{{PackagePath}}/backend/usecase/earnvoucherbypoint/outport"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
+
 	"github.com/stretchr/testify/assert"
 )
 

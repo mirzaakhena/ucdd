@@ -18,7 +18,7 @@ type {{CamelCase .Name}}Usecase struct {
 func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, dto inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
 
 	dbCtx := dataSource.GetDB(ctx, true)
-	defer dataSource.RollbackTransactionOnException(ctx)
+	defer dataSource.RollbackTransactionOnException(dbCtx)
 	{{range .Outports}}
 	{
 		_, err := dataSource.{{PascalCase .Name}}(dbCtx, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}

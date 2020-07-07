@@ -64,7 +64,7 @@ usecases:
     requestFields: [UserPointObject]
     responseFields: [UserPointID]
 
-
+#----------------------------    
 - name: ExpiringUserPoint
   inport:
     requestFields: [UserID]

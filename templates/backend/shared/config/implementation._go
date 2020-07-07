@@ -5,7 +5,7 @@ import "github.com/spf13/viper"
 type defaultConfig struct {
 }
 
-func initConfig(configName, path string) *defaultConfig {
+func initConfig(path, configName string) *defaultConfig {
 	viper.SetConfigName(configName)
 	viper.AddConfigPath(path)
 	err := viper.ReadInConfig()

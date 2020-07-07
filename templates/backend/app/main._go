@@ -4,11 +4,10 @@ import (
 	
 	"{{PackagePath}}/backend/controller/restapi"
 	datasource "{{PackagePath}}/backend/datasource/real"
+	"{{PackagePath}}/backend/shared/config"
+	"{{PackagePath}}/backend/shared/log"	
 	{{range .Usecases}}
 	{{LowerCase .Name}}UC "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor" {{end}}
-	
-	"{{PackagePath}}/backend/shared/config"
-	"{{PackagePath}}/backend/shared/log"
 	
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -19,9 +18,9 @@ import (
 func main() {
 	r := gin.Default()
 
-	cf := config.NewDefaultConfig("config", "$GOPATH/src/{{PackagePath}}/backend")
+	cf := config.NewDefaultConfig("$GOPATH/src/{{PackagePath}}/backend", "config")
 
-	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", "accountingsystem"), cf.GetInt("log.max_age", 14))
+	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", {{AppName}}), cf.GetInt("log.max_age", 14))
 
 	log.Info("Apps is start running")
 
