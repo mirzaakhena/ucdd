@@ -8,28 +8,40 @@ import (
 	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
 	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 )
+
+// {{CamelCase .Name}}Request ...
+type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
+	{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}
+}
 
 // {{PascalCase .Name}}API ...
 func {{PascalCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport, outputPort outport.{{PascalCase .Name}}Outport) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		var req inport.{{PascalCase .Name}}Request
-
-		if err := c.BindJSON(&req); err != nil {
+		// receive json
+		var jsonReq inport.{{PascalCase .Name}}Request
+		if err := c.BindJSON(&jsonReq); err != nil {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
 
+		// convert to request
+		var req inport.{{PascalCase .Name}}Request
+		copier.Copy(&req, jsonReq)
 		log.Info("%v", req)
 
+		// run the usecase
 		res, err := inputPort.Handle(context.Background(), outputPort, req)
 		if err != nil {
 			log.Error("%v", err.Error())
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
+
+		// return the response
 		c.JSON(http.StatusOK, res)
 
 	}

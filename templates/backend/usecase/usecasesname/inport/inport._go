@@ -8,7 +8,7 @@ import (
 
 // {{PascalCase .Name}}Inport ...
 type {{PascalCase .Name}}Inport interface {
-	Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, dto {{PascalCase .Name}}Request) (*{{PascalCase .Name}}Response, error)
+	Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, req {{PascalCase .Name}}Request) (*{{PascalCase .Name}}Response, error)
 }
 
 // {{PascalCase .Name}}Request ...

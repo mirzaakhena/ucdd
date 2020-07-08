@@ -1,11 +1,13 @@
 package main
 
 import (	
-	
+	"{{PackagePath}}/backend/controller/consumer"
 	"{{PackagePath}}/backend/controller/restapi"
 	datasource "{{PackagePath}}/backend/datasource/real"
 	"{{PackagePath}}/backend/shared/config"
-	"{{PackagePath}}/backend/shared/log"	
+	"{{PackagePath}}/backend/shared/log"
+	"bitbucket.org/kfc/loyaltyengine2/backend/shared/messagebroker"
+
 	{{range .Usecases}}
 	{{LowerCase .Name}}UC "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor" {{end}}
 	
@@ -15,8 +17,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql" //
 )
 
-func main() {
-	r := gin.Default()
+func main() {	
 
 	cf := config.NewDefaultConfig("$GOPATH/src/{{PackagePath}}/backend", "config")
 
@@ -29,6 +30,16 @@ func main() {
 		panic(err)
 	}
 	db.LogMode(cf.GetBool("database.log", false))
+
+	messagebroker.RunConsumer(false, cf.GetString("messagebroker.nsqd_url", ""), []messagebroker.ConsumerHandler{
+		{{range .Usecases}}
+		messagebroker.ConsumerHandler{
+			Topic: "{{LowerCase .Name}}", Channel: "1",
+			FunctionHandler: consumer.{{PascalCase .Name}}Consumer({{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(), datasource.New{{PascalCase .Name}}Outport(db)),
+		}, {{end}}
+	})
+
+	r := gin.Default()
 
 	{{range .Usecases}}
 	r.POST("/{{LowerCase .Name}}", restapi.{{PascalCase .Name}}API({{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(), datasource.New{{PascalCase .Name}}Outport(db))) {{end}}

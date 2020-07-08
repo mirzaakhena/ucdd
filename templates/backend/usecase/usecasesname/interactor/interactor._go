@@ -15,7 +15,7 @@ func New{{PascalCase .Name}}Inport() inport.{{PascalCase .Name}}Inport {
 type {{CamelCase .Name}}Usecase struct {
 }
 
-func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, dto inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
+func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, req inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
 
 	dbCtx := dataSource.GetDB(ctx, true)
 	defer dataSource.RollbackTransactionOnException(dbCtx)

@@ -45,7 +45,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/inport/inport._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport/inport.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport/%s_inport.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -57,7 +57,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/outport/outport._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/outport.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/%s_outport.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -95,6 +95,12 @@ func RunProcess(file string) {
 				templateFile := fmt.Sprintf("../templates/backend/controller/restapi/request._http")
 				outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/request.http", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/controller/consumer/consumer._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/controller/consumer/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
+				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
 		}
