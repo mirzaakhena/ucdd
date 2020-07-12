@@ -1,9 +1,13 @@
 packagePath: bitbucket.org/kfc/loyaltyengine2
 
+restapi: true
+messagebroker: false
+
 usecases:
 
 #----------------------------
 - name: RegistrationInitialPoint
+  ignore: false
   inport: 
     requestFields: [UserID]
     responseFields: [UserPointID]
@@ -20,9 +24,14 @@ usecases:
   - name: CreateUserPoint
     requestFields: [UserID, Point, PointBalance, EventState, Description]
     responseFields: [UserPointID]
-    
+
+  - name: CreateUserPointExpiry
+    requestFields: [UserID, NewPoint, ExpiryDate]
+    responseFields: [UserPointExpiryID]
+
 #----------------------------    
 - name: OrderCompletePoint
+  ignore: true
   inport:
     requestFields: [UserID, OrderAmount, OrderID]
     responseFields: [UserPointID]
@@ -42,10 +51,11 @@ usecases:
 
 
 #----------------------------    
-- name: EarnVoucherByPoint
+- name: BuyVoucherWithPoint
+  ignore: true
   inport:
     requestFields: [UserID, VoucherID]
-    responseFields: [ UserPointID]
+    responseFields: [UserPointID]
 
   outports:
   - name: GetLastUserPoint
@@ -66,6 +76,7 @@ usecases:
 
 #----------------------------    
 - name: ExpiringUserPoint
+  ignore: true
   inport:
     requestFields: [UserID]
     responseFields: [UserPointID]

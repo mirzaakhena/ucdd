@@ -38,6 +38,10 @@ func RunProcess(file string) {
 
 	for _, usecase := range tp.Usecases {
 
+		if usecase.Ignore {
+			continue
+		}
+
 		// INPORT
 		{
 			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport", tp.PackagePath, strings.ToLower(usecase.Name))
@@ -85,6 +89,11 @@ func RunProcess(file string) {
 			dir := fmt.Sprintf("../../../../%s/backend/controller/restapi", tp.PackagePath)
 			os.MkdirAll(dir, 0777)
 
+			if tp.MessageBroker {
+				dir = fmt.Sprintf("../../../../%s/backend/controller/consumer", tp.PackagePath)
+				os.MkdirAll(dir, 0777)
+			}
+
 			{
 				templateFile := fmt.Sprintf("../templates/backend/controller/restapi/restapi._go")
 				outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
@@ -97,7 +106,7 @@ func RunProcess(file string) {
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 
-			{
+			if tp.MessageBroker {
 				templateFile := fmt.Sprintf("../templates/backend/controller/consumer/consumer._go")
 				outputFile := fmt.Sprintf("../../../../%s/backend/controller/consumer/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)

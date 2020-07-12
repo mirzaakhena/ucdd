@@ -1,12 +1,12 @@
 package main
 
-import (	
-	"{{PackagePath}}/backend/controller/consumer"
+import (	{{if .MessageBroker}}
+	"{{PackagePath}}/backend/controller/consumer" {{end}}
 	"{{PackagePath}}/backend/controller/restapi"
 	datasource "{{PackagePath}}/backend/datasource/real"
 	"{{PackagePath}}/backend/shared/config"
-	"{{PackagePath}}/backend/shared/log"
-	"bitbucket.org/kfc/loyaltyengine2/backend/shared/messagebroker"
+	"{{PackagePath}}/backend/shared/log" {{if .MessageBroker}}
+	"bitbucket.org/kfc/loyaltyengine2/backend/shared/messagebroker" {{end}}
 
 	{{range .Usecases}}
 	{{LowerCase .Name}}UC "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor" {{end}}
@@ -31,6 +31,7 @@ func main() {
 	}
 	db.LogMode(cf.GetBool("database.log", false))
 
+	{{if .MessageBroker}}
 	messagebroker.RunConsumer(false, cf.GetString("messagebroker.nsqd_url", ""), []messagebroker.ConsumerHandler{
 		{{range .Usecases}}
 		messagebroker.ConsumerHandler{
@@ -38,6 +39,7 @@ func main() {
 			FunctionHandler: consumer.{{PascalCase .Name}}Consumer({{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(), datasource.New{{PascalCase .Name}}Outport(db)),
 		}, {{end}}
 	})
+	{{end}}
 
 	r := gin.Default()
 

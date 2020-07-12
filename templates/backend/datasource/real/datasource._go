@@ -25,6 +25,8 @@ func (_r *{{CamelCase $.Name}}Outport) {{PascalCase .Name}}(ctx context.Context,
 
 	//gormDB := transaction.ExtractGormDB(ctx)
 
-	return &outport.{{PascalCase .Name}}Response{}, nil
+	return &outport.{{PascalCase .Name}}Response{ {{range .ResponseFields}}
+		{{PascalCase .}}: "", {{end}}
+	}, nil
 }
 {{end}}
