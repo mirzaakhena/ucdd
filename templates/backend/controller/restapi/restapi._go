@@ -10,13 +10,13 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-// {{CamelCase .Name}}Request ...
-type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
-	{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}
-}
-
 // {{PascalCase .Name}}API ...
 func {{PascalCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport) gin.HandlerFunc {
+
+	// {{CamelCase .Name}}Request ...
+	type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
+		{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}
+	}
 
 	return func(c *gin.Context) {
 

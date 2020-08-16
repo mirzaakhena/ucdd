@@ -11,13 +11,15 @@ import (
 	"github.com/jinzhu/copier"
 )
 
-// {{CamelCase .Name}}Request ...
-type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
-	{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}
-}
+
 
 // {{PascalCase .Name}}Consumer ...
-func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport, outputPort outport.{{PascalCase .Name}}Outport) messagebroker.FunctionHandler {
+func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport) messagebroker.FunctionHandler {
+
+	// {{CamelCase .Name}}Request ...
+	type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
+		{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}
+	}
 
 	return func(message []byte) {
 
@@ -34,7 +36,7 @@ func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport, o
 		log.Info("%v", req)
 
 		// run the usecase
-		_, err := inputPort.Handle(context.Background(), outputPort, req)
+		_, err := inputPort.Handle(context.Background(), req)
 		if err != nil {
 			log.Error("%v", err.Error())
 			return
