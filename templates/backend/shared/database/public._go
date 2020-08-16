@@ -1,0 +1,10 @@
+package database
+
+import (
+	"github.com/jinzhu/gorm"
+)
+
+// NewTransactionDB is
+func NewTransactionDB(DB *gorm.DB) Database {
+	return &GormDatabase{DB: DB}
+}

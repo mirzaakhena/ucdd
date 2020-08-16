@@ -8,29 +8,36 @@ import (
 )
 
 // New{{PascalCase .Name}}Inport ...
-func New{{PascalCase .Name}}Inport() inport.{{PascalCase .Name}}Inport {
-	return &{{CamelCase .Name}}Usecase{}
+func New{{PascalCase .Name}}Inport(outputPort outport.{{PascalCase .Name}}Outport) inport.{{PascalCase .Name}}Inport {
+	return &{{CamelCase .Name}}Usecase{
+		dataSource: outputPort,
+	}
 }
 
 type {{CamelCase .Name}}Usecase struct {
+	dataSource outport.{{PascalCase .Name}}Outport
 }
 
-func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, dataSource outport.{{PascalCase .Name}}Outport, req inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
+func (_r *{{CamelCase .Name}}Usecase) Handle(ctx context.Context, req inport.{{PascalCase .Name}}Request) (*inport.{{PascalCase .Name}}Response, error) {
 
-	dbCtx := dataSource.GetDB(ctx, true)
-	defer dataSource.RollbackTransactionOnException(dbCtx)
+	// dbContext := _r.dataSource.GetDB(ctx)
+	dbContext, trx := _r.dataSource.GetDBWithTransaction(ctx)
+	
+	defer trx.Rollback()
+
 	{{range .Outports}}
 	{
-		_, err := dataSource.{{PascalCase .Name}}(dbCtx, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}
+		_, err := _r.dataSource.{{PascalCase .Name}}(dbContext, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}
 			{{PascalCase .}}: "", {{end}}
 		})
 		if err != nil {
-			dataSource.RollbackTransaction(dbCtx)
 			return nil, err
-		}
+		}		
 	} {{end}}	
 
-	dataSource.CommitTransaction(dbCtx)
+	trx.Commit()
 
-	return &inport.{{PascalCase .Name}}Response{}, nil
+	return &inport.{{PascalCase .Name}}Response{ {{range .Inport.ResponseFields}}
+		{{PascalCase .}}: "", {{end}}
+	}, nil
 }

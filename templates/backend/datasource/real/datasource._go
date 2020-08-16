@@ -3,30 +3,33 @@ package real
 import (
 	"context"
 
-	"{{PackagePath}}/backend/shared/transaction"
-	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
 	"github.com/jinzhu/gorm"
+	"{{PackagePath}}/backend/shared/database"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
 )
 
 // New{{PascalCase .Name}}Outport ...
-func New{{PascalCase .Name}}Outport(DB *gorm.DB) outport.{{PascalCase .Name}}Outport {
+func New{{PascalCase .Name}}Outport(db *gorm.DB) outport.{{PascalCase .Name}}Outport {
 	return &{{CamelCase .Name}}Outport{
-		transaction.GormTransactionImpl{
-			DB: DB,
-		},
+		database.GormDatabase{
+			DB: db,
+		},		
 	}
 }
 
 type {{CamelCase .Name}}Outport struct {
-	transaction.GormTransactionImpl
+	database.GormDatabase
 }
 {{range .Outports}}
 func (_r *{{CamelCase $.Name}}Outport) {{PascalCase .Name}}(ctx context.Context, req outport.{{PascalCase .Name}}Request) (*outport.{{PascalCase .Name}}Response, error) {
 
-	//gormDB := transaction.ExtractGormDB(ctx)
+	// gormDB := database.ExtractGormDB(ctx)
+	{{range .RequestFields}}
+	// req.{{.}} {{end}}
 
 	return &outport.{{PascalCase .Name}}Response{ {{range .ResponseFields}}
 		{{PascalCase .}}: "", {{end}}
 	}, nil
+
 }
 {{end}}

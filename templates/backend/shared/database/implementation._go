@@ -1,0 +1,72 @@
+package database
+
+import (
+	"context"
+
+	"github.com/jinzhu/gorm"
+)
+
+// GormDatabase is
+type GormDatabase struct {
+	DB *gorm.DB
+}
+
+type transactionType string
+
+type transaction struct {
+	DB               *gorm.DB
+	IsOnLockingState bool
+}
+
+// GetDB is
+func (g *GormDatabase) GetDB(db context.Context) context.Context {
+	return context.WithValue(db, TransactionLockKey, g.DB)
+}
+
+// GetDBWithTransaction is
+func (g *GormDatabase) GetDBWithTransaction(db context.Context) (context.Context, Transaction) {
+	startTransaction := g.DB.Begin()
+	ctx := context.WithValue(db, TransactionLockKey, startTransaction)
+	return ctx, &transaction{
+		DB:               startTransaction,
+		IsOnLockingState: true,
+	}
+}
+
+// CommitTransaction is
+func (t *transaction) Commit() {
+	if t.IsOnLockingState {
+		t.DB.Commit()
+		t.IsOnLockingState = false
+	}
+}
+
+// RollbackTransaction is
+func (t *transaction) Rollback() {
+
+	if !t.IsOnLockingState {
+		return
+	}
+
+	t.IsOnLockingState = false
+
+	if err := recover(); err != nil {
+		t.DB.Rollback()
+		panic(err)
+	}
+
+	t.DB.Rollback()
+}
+
+// TransactionLockKey is
+const TransactionLockKey = transactionType("TRANSACTION_LOCK")
+
+// ExtractGormDB is
+func ExtractGormDB(ctx context.Context) *gorm.DB {
+	db := ctx.Value(TransactionLockKey)
+	DB, ok := db.(*gorm.DB)
+	if !ok {
+		panic("cannot assert to *gorm.DB")
+	}
+	return DB
+}

@@ -11,32 +11,42 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type mockTrx struct{}
+
+var mockTrxObj = mockTrx{}
+
+func (*mockTrx) Commit() {
+
+}
+
+func (*mockTrx) Rollback() {
+
+}
+
 func Test_Normal(t *testing.T) {
 
 	ctx := context.Background()
-
-	dbCtx := context.Background()
 
 	req := inport.{{PascalCase .Name}}Request{}
 
 	outputPort := mocks.{{PascalCase .Name}}Outport{}
 
-	outputPort.On("GetDB", ctx, true).Return(dbCtx)
+	dbContext := context.Background()
 
-	outputPort.On("RollbackTransactionOnException", dbCtx).Return(nil)
-
-	outputPort.On("CommitTransaction", dbCtx).Return(nil)
+	outputPort.On("GetDBWithTransaction", ctx).Return(dbContext, &mockTrxObj)
 
   {{range .Outports}}
-	outputPort.On("{{PascalCase .Name}}", dbCtx, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}
+	outputPort.On("{{PascalCase .Name}}", dbContext, outport.{{PascalCase .Name}}Request{ {{range .RequestFields}}
 		{{PascalCase .}}: "", {{end}}
 	}).Return(nil, nil) 
   {{end}}
   
-	res, err := New{{PascalCase .Name}}Inport().Handle(ctx, &outputPort, req)
+	res, err := New{{PascalCase .Name}}Inport(&outputPort).Handle(ctx, req)
 
 	assert.Nil(t, err)
 
-	assert.Equal(t, &inport.{{PascalCase .Name}}Response{}, res)
+	assert.Equal(t, &inport.{{PascalCase .Name}}Response{ {{range .Inport.ResponseFields}}
+		{{PascalCase .}}: "", {{end}}		
+	}, res)
 
 }

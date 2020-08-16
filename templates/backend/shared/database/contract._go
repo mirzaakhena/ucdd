@@ -1,0 +1,33 @@
+package database
+
+import "context"
+
+// Transaction ...
+type Transaction interface {
+	Commit()
+	Rollback()
+}
+
+// Database ...
+type Database interface {
+	GetDB(context.Context) context.Context
+	GetDBWithTransaction(context.Context) (context.Context, Transaction)
+}
+
+// TransactionScope ...
+func TransactionScope(ctx context.Context, db Database, fn func(ctx context.Context) error) error {
+	dbCtx, trx := db.GetDBWithTransaction(ctx)
+	defer trx.Rollback()
+
+	err := fn(dbCtx)
+
+	if err != nil {
+		trx.Rollback()
+		return err
+	}
+
+	trx.Commit()
+
+	return nil
+
+}

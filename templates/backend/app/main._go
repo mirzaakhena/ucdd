@@ -6,7 +6,7 @@ import (	{{if .MessageBroker}}
 	datasource "{{PackagePath}}/backend/datasource/real"
 	"{{PackagePath}}/backend/shared/config"
 	"{{PackagePath}}/backend/shared/log" {{if .MessageBroker}}
-	"bitbucket.org/kfc/loyaltyengine2/backend/shared/messagebroker" {{end}}
+	"{{PackagePath}}/backend/shared/messagebroker" {{end}}
 
 	{{range .Usecases}}
 	{{LowerCase .Name}}UC "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor" {{end}}
@@ -44,7 +44,11 @@ func main() {
 	r := gin.Default()
 
 	{{range .Usecases}}
-	r.POST("/{{LowerCase .Name}}", restapi.{{PascalCase .Name}}API({{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(), datasource.New{{PascalCase .Name}}Outport(db))) {{end}}
+	outputPort := datasource.New{{PascalCase .Name}}Outport(db)
+	inputPort :=  {{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(outputPort)
+	r.POST("/{{LowerCase .Name}}", restapi.{{PascalCase .Name}}API(inputPort)) {{end}}
 	
-	r.Run()
+	if err := r.Run(); err != nil {
+		panic(err)
+	}
 }

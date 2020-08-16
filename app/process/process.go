@@ -49,7 +49,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/inport/inport._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport/%s_inport.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport/inport.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -61,7 +61,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/outport/outport._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/%s_outport.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/outport.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -73,13 +73,13 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/interactor/interactor._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/%s.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/interactor.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/usecase/usecasesname/interactor/interactor_test._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/%s_normal_test.go", tp.PackagePath, strings.ToLower(usecase.Name), strings.ToLower(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/normal_test.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 		}
@@ -127,7 +127,7 @@ func RunProcess(file string) {
 
 			{
 				templateFile := fmt.Sprintf("../templates/backend/datasource/real/datasource._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/datasource/real/%s_outport.go", tp.PackagePath, SnakeCase(usecase.Name))
+				outputFile := fmt.Sprintf("../../../../%s/backend/datasource/real/%s.go", tp.PackagePath, SnakeCase(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
@@ -139,26 +139,26 @@ func RunProcess(file string) {
 			os.MkdirAll(dir, 0777)
 		}
 
-		// TRANSACTION
+		// DATABASE
 		{
-			dir := fmt.Sprintf("../../../../%s/backend/shared/transaction", tp.PackagePath)
+			dir := fmt.Sprintf("../../../../%s/backend/shared/database", tp.PackagePath)
 			os.MkdirAll(dir, 0777)
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/contract._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/contract.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/database/contract._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/database/contract.go", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/implementation._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/implementation.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/database/implementation._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/database/implementation.go", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 
 			{
-				templateFile := fmt.Sprintf("../templates/backend/shared/transaction/public._go")
-				outputFile := fmt.Sprintf("../../../../%s/backend/shared/transaction/public.go", tp.PackagePath)
+				templateFile := fmt.Sprintf("../templates/backend/shared/database/public._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/database/public.go", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 		}
@@ -183,6 +183,43 @@ func RunProcess(file string) {
 			{
 				templateFile := fmt.Sprintf("../templates/backend/shared/log/public._go")
 				outputFile := fmt.Sprintf("../../../../%s/backend/shared/log/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+		}
+
+		// MESSAGE_BROKER
+		{
+			dir := fmt.Sprintf("../../../../%s/backend/shared/messagebroker", tp.PackagePath)
+			os.MkdirAll(dir, 0777)
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/contract._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/contract.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/public._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/public.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/implementation-consumer._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/implementation-consumer.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/implementation-producer._go")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/implementation-producer.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := fmt.Sprintf("../templates/backend/shared/messagebroker/docker-compose._yml")
+				outputFile := fmt.Sprintf("../../../../%s/backend/shared/messagebroker/docker-compose.yml", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 

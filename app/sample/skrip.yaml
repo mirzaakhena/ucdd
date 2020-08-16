@@ -1,97 +1,30 @@
-packagePath: bitbucket.org/kfc/loyaltyengine2
+packagePath: github.com/mirzaakhena/accounting
 
 restapi: true
 messagebroker: false
+grpc: false
 
 usecases:
+  #----------------------------
+  - name: CreateAccount
+    ignore: false
+    inport:
+      requestFields: [TenantID, Accounts]
+      responseFields: [Aaa, Bbbb, C12]
 
-#----------------------------
-- name: RegistrationInitialPoint
-  ignore: false
-  inport: 
-    requestFields: [UserID]
-    responseFields: [UserPointID]
+    outports:
+      - name: SaveAccount
+        requestFields: [TenantID, Code, Name, Level, Side, HasChild]
+        responseFields: [AccountID]
 
-  outports:
-  - name: IsAlreadyHasUserPoint
-    requestFields: [UserID]    
-    responseFields: [YesItHas]
+      - name: GetAccountByCode
+        requestFields: [TenantID, Code]
+        responseFields: [HasChild, Side, Level]
 
-  - name: GetInitialPoint
-    requestFields:
-    responseFields: [Point]
+      - name: HasSameCode
+        requestFields: [TenantID, Level, Code]
+        responseFields: [YesItHas]
 
-  - name: CreateUserPoint
-    requestFields: [UserID, Point, PointBalance, EventState, Description]
-    responseFields: [UserPointID]
-
-  - name: CreateUserPointExpiry
-    requestFields: [UserID, NewPoint, ExpiryDate]
-    responseFields: [UserPointExpiryID]
-
-#----------------------------    
-- name: OrderCompletePoint
-  ignore: true
-  inport:
-    requestFields: [UserID, OrderAmount, OrderID]
-    responseFields: [UserPointID]
-
-  outports:
-  - name: GetPointByOrderAmount
-    requestFields: [OrderAmount]
-    responseFields: [Point]
-    
-  - name: GetLastUserPoint
-    requestFields: [UserID]
-    responseFields: [UserPoint]
-
-  - name: CreateUserPoint
-    requestFields: [UserID, Point, PointBalance, EventState, Description]
-    responseFields: [UserPointID]    
-
-
-#----------------------------    
-- name: BuyVoucherWithPoint
-  ignore: true
-  inport:
-    requestFields: [UserID, VoucherID]
-    responseFields: [UserPointID]
-
-  outports:
-  - name: GetLastUserPoint
-    requestFields: [UserID]
-    responseFields: [UserPoint]
-
-  - name: GetPointRequired
-    requestFields: [VoucherID]
-    responseFields: [Point]
-  
-  - name: BuyVoucher
-    requestFields: [VoucherID]
-    responseFields: [VoucherOrderID]
-
-  - name: CreateUserPoint
-    requestFields: [UserPointObject]
-    responseFields: [UserPointID]
-
-#----------------------------    
-- name: ExpiringUserPoint
-  ignore: true
-  inport:
-    requestFields: [UserID]
-    responseFields: [UserPointID]
-
-  outports:
-  - name: GetLastUserPointExpired
-    requestFields: [UserID]
-    responseFields: [ExpireUserPoint]
-  
-  - name: CreateUserPointExpired
-    requestFields: [ExpireUserPointObject]
-    responseFields: [UserPointExpiredID]
-
-  - name: CreateUserPoint
-    requestFields: [UserPointObject]
-    responseFields: [UserPointID]
-  
-    
+      - name: HasSameName
+        requestFields: [TenantID, Level, Name]
+        responseFields: [YesItHas]

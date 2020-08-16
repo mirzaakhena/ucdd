@@ -3,12 +3,12 @@ package outport
 import (
 	"context"
 
-	"{{PackagePath}}/backend/shared/transaction"
+	"{{PackagePath}}/backend/shared/database"
 )
 
 // {{PascalCase .Name}}Outport ...
-type {{PascalCase .Name}}Outport interface {
-	transaction.Transaction {{range .Outports}}
+type {{PascalCase .Name}}Outport interface { 
+	database.Database {{range .Outports}}
 	{{PascalCase .Name}}(ctx context.Context, req {{PascalCase .Name}}Request) (*{{PascalCase .Name}}Response, error) {{end}}
 }
 {{range .Outports}}

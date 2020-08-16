@@ -1,0 +1,138 @@
+packagePath: github.com/mirzaakhena/accounting
+
+restapi: true
+messagebroker: true
+grpc: false
+
+usecases:
+  #----------------------------
+  - name: RegistrationInitialPoint
+    ignore: true
+    inport:
+      requestFields: [UserID, CurrentDate]
+      responseFields: [UserPointID]
+
+    outports:
+      - name: IsAlreadyHasUserPoint
+        requestFields: [UserID]
+        responseFields: [YesItHas]
+
+      - name: GetInitialPoint
+        requestFields:
+        responseFields: [Point]
+
+      - name: CreateUserPoint
+        requestFields: [UserID, Point, PointBalance, EventState, Description]
+        responseFields: [UserPointID]
+
+      - name: CreateUserPointExpiry
+        requestFields: [UserID, NewPoint, StartPeriod, EndPeriod, ExpiryDate]
+        responseFields: [UserPointExpiryID]
+
+      - name: GetCurrentPeriodInfo
+        requestFields: [CurrentDate]
+        responseFields: [StartPeriod, EndPeriod, ExpiryDate]
+
+  #----------------------------
+  - name: OrderCompletePoint
+    ignore: true
+    inport:
+      requestFields: [UserID, OrderAmount, OrderID]
+      responseFields: [UserPointID]
+
+    outports:
+      - name: GetPointByOrderAmount
+        requestFields: [OrderAmount]
+        responseFields: [Point]
+
+      - name: GetLastUserPoint
+        requestFields: [UserID]
+        responseFields: [PointBalance]
+
+      - name: CreateUserPoint
+        requestFields: [UserID, Point, PointBalance, EventState, Description]
+        responseFields: [UserPointID]
+
+      - name: GetCurrentPeriodInfo
+        requestFields: [CurrentDate]
+        responseFields: [StartPeriod, EndPeriod, ExpiryDate]
+
+      - name: GetLastUserPointExpiry
+        requestFields: [UserID, StartPeriod, EndPeriod, ExpiryDate]
+        responseFields: [UserPointExpiryID, LastPointExpiry]
+
+      - name: CreateUserPointExpiry
+        requestFields: [UserID, NewPoint, StartPeriod, EndPeriod, ExpiryDate]
+        responseFields: [UserPointExpiryID]
+
+      - name: UpdateUserPointExpiry
+        requestFields:
+          [
+            UserPointExpiryID,
+            UserID,
+            NewPoint,
+            StartPeriod,
+            EndPeriod,
+            ExpiryDate,
+          ]
+        responseFields: [UserPointExpiryID]
+
+  #----------------------------
+  - name: BuyVoucherWithPoint
+    ignore: true
+    inport:
+      requestFields: [UserID, VoucherID]
+      responseFields: [UserPointID]
+
+    outports:
+      - name: GetLastUserPoint
+        requestFields: [UserID]
+        responseFields: [PointBalance]
+
+      - name: GetPointRequired
+        requestFields: [VoucherID]
+        responseFields: [Point]
+
+      - name: BuyVoucher
+        requestFields: [VoucherID]
+        responseFields: [VoucherOrderID]
+
+      - name: CreateUserPoint
+        requestFields: [UserPointObject]
+        responseFields: [UserPointID]
+
+      - name: GetActiveUserPointExpiry
+        requestFields: [UserID]
+        responseFields: [ListUserPointExpiry]
+
+      - name: UpdateUserPointExpiry
+        requestFields:
+          [
+            UserPointExpiryID,
+            UserID,
+            NewPoint,
+            StartPeriod,
+            EndPeriod,
+            ExpiryDate,
+          ]
+        responseFields: [UserPointExpiryID]
+
+  #----------------------------
+  - name: ExpiringUserPoint
+    ignore: false
+    inport:
+      requestFields: [UserID]
+      responseFields: [UserPointID]
+
+    outports:
+      - name: GetLastUserPointExpired
+        requestFields: [UserID]
+        responseFields: [ExpireUserPoint]
+
+      - name: CreateUserPointExpired
+        requestFields: [ExpireUserPointObject]
+        responseFields: [UserPointExpiredID]
+
+      - name: CreateUserPoint
+        requestFields: [UserPointObject]
+        responseFields: [UserPointID]
