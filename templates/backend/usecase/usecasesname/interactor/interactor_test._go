@@ -33,6 +33,8 @@ func Test_Normal(t *testing.T) {
 
 	dbContext := context.Background()
 
+	// outputPort.On("GetDB", ctx).Return(dbContext)
+
 	outputPort.On("GetDBWithTransaction", ctx).Return(dbContext, &mockTrxObj)
 
   {{range .Outports}}

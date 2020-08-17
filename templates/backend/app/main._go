@@ -1,7 +1,7 @@
 package main
 
 import (
-	"{{PackagePath}}/backend/controller/restapi"
+	"{{PackagePath}}/backend/configuration"
 	"{{PackagePath}}/backend/shared/config"
 	"{{PackagePath}}/backend/shared/log" {{if .MessageBroker}}
 	"{{PackagePath}}/backend/controller/consumer"
@@ -39,8 +39,7 @@ func main() {
 
 	r := gin.Default()
 
-	{{range .Usecases}}
-	restapi.{{PascalCase .Name}}Setup(r, db) {{end}}
+	configuration.SetupDependency(r, db)
 	
 	if err := r.Run(); err != nil {
 		panic(err)
