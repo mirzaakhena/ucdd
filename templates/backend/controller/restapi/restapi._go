@@ -4,14 +4,25 @@ import (
 	"context"
 	"net/http"
 
-	"{{PackagePath}}/backend/shared/log"
-	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
+	"github.com/jinzhu/gorm"
+
+	"{{PackagePath}}/backend/shared/log"
+	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
+
+	datasource "{{PackagePath}}/backend/datasource/real"
+	usecase "{{PackagePath}}/backend/usecase/createaccount/interactor"
 )
 
-// {{PascalCase .Name}}API ...
-func {{PascalCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport) gin.HandlerFunc {
+func {{PascalCase .Name}}Setup(r *gin.Engine, db *gorm.DB) {
+	outputPort := datasource.New{{PascalCase .Name}}Outport(db)
+	inputPort := usecase.New{{PascalCase .Name}}Inport(outputPort)
+	r.POST("/{{CamelCase .Name}}", {{CamelCase .Name}}API(inputPort))
+}
+
+// {{CamelCase .Name}}API ...
+func {{CamelCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport) gin.HandlerFunc {
 
 	// {{CamelCase .Name}}Request ...
 	type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}

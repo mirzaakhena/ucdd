@@ -1,15 +1,11 @@
 package main
 
-import (	{{if .MessageBroker}}
-	"{{PackagePath}}/backend/controller/consumer" {{end}}
+import (
 	"{{PackagePath}}/backend/controller/restapi"
-	datasource "{{PackagePath}}/backend/datasource/real"
 	"{{PackagePath}}/backend/shared/config"
 	"{{PackagePath}}/backend/shared/log" {{if .MessageBroker}}
+	"{{PackagePath}}/backend/controller/consumer"
 	"{{PackagePath}}/backend/shared/messagebroker" {{end}}
-
-	{{range .Usecases}}
-	{{LowerCase .Name}}UC "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor" {{end}}
 	
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -44,9 +40,7 @@ func main() {
 	r := gin.Default()
 
 	{{range .Usecases}}
-	outputPort := datasource.New{{PascalCase .Name}}Outport(db)
-	inputPort :=  {{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(outputPort)
-	r.POST("/{{LowerCase .Name}}", restapi.{{PascalCase .Name}}API(inputPort)) {{end}}
+	restapi.{{PascalCase .Name}}Setup(r, db) {{end}}
 	
 	if err := r.Run(); err != nil {
 		panic(err)
