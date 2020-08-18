@@ -15,14 +15,14 @@ import (
 	usecase "{{PackagePath}}/backend/usecase/createaccount/interactor"
 )
 
-// {{PascalCase .Name}}Setup ...
-func {{PascalCase .Name}}Setup(r *gin.Engine, db *gorm.DB) {
+// {{PascalCase .Name}} ...
+func {{PascalCase .Name}}(r *gin.Engine, db *gorm.DB) {
 	outputPort := datasource.New{{PascalCase .Name}}Outport(db)
 	inputPort := usecase.New{{PascalCase .Name}}Inport(outputPort)
-	r.POST("/{{CamelCase .Name}}", {{CamelCase .Name}}API(inputPort))
+	r.POST("/{{CamelCase .Name}}", {{CamelCase .Name}}(inputPort))
 }
 
-func {{CamelCase .Name}}API(inputPort inport.{{PascalCase .Name}}Inport) gin.HandlerFunc {
+func {{CamelCase .Name}}(inputPort inport.{{PascalCase .Name}}Inport) gin.HandlerFunc {
 
 	type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
 		{{PascalCase .}}    string `json:"{{CamelCase .}}"` {{end}}

@@ -1,0 +1,40 @@
+package binder
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	"{{PackagePath}}/backend/shared/config"
+	"{{PackagePath}}/backend/shared/log"
+
+	_ "github.com/jinzhu/gorm/dialects/mysql"  //
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //
+)
+
+type AppBinder struct {
+	Router   *gin.Engine
+	Database *gorm.DB
+	Config   config.Config
+}
+
+func NewAppBinder() (*AppBinder, error) {
+
+	cf := config.NewDefaultConfig("$GOPATH/src/{{PackagePath}}/backend", "config")
+
+	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
+
+	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(cf.GetBool("database.log", false))
+
+	router := gin.Default()
+
+	app := AppBinder{
+		Config:   cf,
+		Database: db,
+		Router:   router,
+	}
+
+	return &app, nil
+}

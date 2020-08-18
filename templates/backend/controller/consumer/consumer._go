@@ -7,14 +7,13 @@ import (
 	"{{PackagePath}}/backend/shared/log"
 	"{{PackagePath}}/backend/shared/messagebroker"	
 	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
-	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/outport"
 	"github.com/jinzhu/copier"
 )
 
 
 
-// {{PascalCase .Name}}Consumer ...
-func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport) messagebroker.FunctionHandler {
+// {{PascalCase .Name}} ...
+func {{PascalCase .Name}}(inputPort inport.{{PascalCase .Name}}Inport) messagebroker.FunctionHandler {
 
 	// {{CamelCase .Name}}Request ...
 	type {{CamelCase .Name}}Request struct { {{range .Inport.RequestFields}}
@@ -32,7 +31,10 @@ func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport) m
 
 		// convert to request
 		var req inport.{{PascalCase .Name}}Request
-		copier.Copy(&req, messageReq)
+		if err := copier.Copy(&req, messageReq); err != nil {
+			log.Error("%v", err.Error())
+			return
+		}
 		log.Info("%v", req)
 
 		// run the usecase
@@ -42,7 +44,6 @@ func {{PascalCase .Name}}Consumer(inputPort inport.{{PascalCase .Name}}Inport) m
 			return
 		}
 
-		return
 	}
 
 }

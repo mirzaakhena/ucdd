@@ -1,8 +1,0 @@
-package transaction
-
-import "github.com/jinzhu/gorm"
-
-// NewTransactionDB is
-func NewTransactionDB(DB *gorm.DB) Transaction {
-	return &GormTransactionImpl{DB: DB}
-}

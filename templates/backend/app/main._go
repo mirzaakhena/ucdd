@@ -1,47 +1,21 @@
 package main
 
 import (
-	"{{PackagePath}}/backend/configuration"
-	"{{PackagePath}}/backend/shared/config"
-	"{{PackagePath}}/backend/shared/log" {{if .MessageBroker}}
-	"{{PackagePath}}/backend/controller/consumer"
-	"{{PackagePath}}/backend/shared/messagebroker" {{end}}
-	
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite" //
-	_ "github.com/jinzhu/gorm/dialects/mysql" //
+	"github.com/mirzaakhena/accounting/backend/binder"
+	"github.com/mirzaakhena/accounting/backend/shared/log"
 )
 
-func main() {	
+func main() {
 
-	cf := config.NewDefaultConfig("$GOPATH/src/{{PackagePath}}/backend", "config")
-
-	log.UseRotateFile(cf.GetString("log.path", "."), cf.GetString("application.name", "{{AppName}}"), cf.GetInt("log.max_age", 14))
-
-	log.Info("Apps is start running")
-
-	db, err := gorm.Open(cf.GetString("database.dialect", "sqlite3"), cf.GetString("database.connection_string", "database.db"))
+	appBinder, err := binder.NewAppBinder()
 	if err != nil {
 		panic(err)
 	}
-	db.LogMode(cf.GetBool("database.log", false))
 
-	{{if .MessageBroker}}
-	messagebroker.RunConsumer(false, cf.GetString("messagebroker.nsqd_url", ""), []messagebroker.ConsumerHandler{
-		{{range .Usecases}}
-		messagebroker.ConsumerHandler{
-			Topic: "{{LowerCase .Name}}", Channel: "1",
-			FunctionHandler: consumer.{{PascalCase .Name}}Consumer({{LowerCase .Name}}UC.New{{PascalCase .Name}}Inport(), datasource.New{{PascalCase .Name}}Outport(db)),
-		}, {{end}}
-	})
-	{{end}}
+	log.Info("binding component")
+	appBinder.Bind()
 
-	r := gin.Default()
+	log.Info("run apps")
+	appBinder.Run()
 
-	configuration.SetupDependency(r, db)
-	
-	if err := r.Run(); err != nil {
-		panic(err)
-	}
 }

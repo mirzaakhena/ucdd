@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   nsqlookupd:
     image: nsqio/nsq
     command: /nsqlookupd
@@ -16,5 +15,5 @@ services:
     ports:
       - "4150:4150"
       - "4151"
-    volumes: 
+    volumes:
       - "./nsqdata:/data"

@@ -90,16 +90,28 @@ func RunProcess(file string) {
 			}
 		}
 
-		// CONFIGURATION
+		// BINDER
 		{
-			dir := fmt.Sprintf("../../../../%s/backend/configuration", tp.PackagePath)
+			dir := fmt.Sprintf("../../../../%s/backend/binder", tp.PackagePath)
 			if err := os.MkdirAll(dir, 0777); err != nil {
 				panic(err)
 			}
 
 			{
-				templateFile := "../templates/backend/configuration/configuration._go"
-				outputFile := fmt.Sprintf("../../../../%s/backend/configuration/configuration.go", tp.PackagePath)
+				templateFile := "../templates/backend/binder/runner._go"
+				outputFile := fmt.Sprintf("../../../../%s/backend/binder/runner.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := "../templates/backend/binder/setup_component._go"
+				outputFile := fmt.Sprintf("../../../../%s/backend/binder/setup_component.go", tp.PackagePath)
+				basic(&tp, templateFile, outputFile, tp, 0664)
+			}
+
+			{
+				templateFile := "../templates/backend/binder/wiring_component._go"
+				outputFile := fmt.Sprintf("../../../../%s/backend/binder/wiring_component.go", tp.PackagePath)
 				basic(&tp, templateFile, outputFile, tp, 0664)
 			}
 
@@ -125,11 +137,11 @@ func RunProcess(file string) {
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
-			{
-				templateFile := "../templates/backend/controller/restapi/request._http"
-				outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/request.http", tp.PackagePath)
-				basic(&tp, templateFile, outputFile, tp, 0664)
-			}
+			// {
+			// 	templateFile := "../templates/backend/controller/restapi/request._http"
+			// 	outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/request.http", tp.PackagePath)
+			// 	basic(&tp, templateFile, outputFile, tp, 0664)
+			// }
 
 			if tp.MessageBroker {
 				templateFile := "../templates/backend/controller/consumer/consumer._go"

@@ -1,0 +1,9 @@
+package binder
+
+import (
+	"{{PackagePath}}/backend/controller/restapi"
+)
+
+func (a *AppBinder) Bind() { {{range .Usecases}}
+	restapi.{{PascalCase .Name}}(a.Router, a.Database) {{end}}
+}
