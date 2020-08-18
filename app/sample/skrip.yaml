@@ -1,30 +1,60 @@
 packagePath: github.com/mirzaakhena/accounting
 
-restapi: false
-messagebroker: true
-grpc: false
-
 usecases:
   #----------------------------
   - name: CreateAccount
-    ignore: false
+    ignoreThis: true
+    ignoreTest: true
+    ignoreBinder: true
+    ignoreInteractor: true
+    defaultDatasource: production
+
+    datasources:
+      - name: production
+        ignoreThis: true
+
+      - name: testing
+        ignoreThis: true
+
+    controllers:
+      - type: restapi
+        ignoreThis: true
+        framework: gin-gonic
+
+      - type: messaging
+        ignoreThis: true
+        framework: rabbitmq
+
+      - type: rpc
+        ignoreThis: true
+        framework: grpc
+
     inport:
+      ignoreThis: true
       requestFields: [TenantID, Accounts]
-      responseFields: [Aaa, Bbbb, C12]
+      responseFields: []
 
     outports:
-      - name: SaveAccount
-        requestFields: [TenantID, Code, Name, Level, Side, HasChild]
-        responseFields: [AccountID]
-
       - name: GetAccountByCode
+        ignoreThis: true
+        ignore: true
         requestFields: [TenantID, Code]
         responseFields: [HasChild, Side, Level]
 
       - name: HasSameCode
+        ignoreThis: true
+        ignore: true
         requestFields: [TenantID, Level, Code]
         responseFields: [YesItHas]
 
       - name: HasSameName
+        ignoreThis: true
+        ignore: true
         requestFields: [TenantID, Level, Name]
         responseFields: [YesItHas]
+
+      - name: SaveAccount
+        ignoreThis: true
+        ignore: true
+        requestFields: [TenantID, Code, Name, Level, Side, HasChild]
+        responseFields: [AccountID]

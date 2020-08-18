@@ -1,7 +1,7 @@
 packagePath: github.com/mirzaakhena/accounting
 
 restapi: true
-messagebroker: true
+consumer: true
 grpc: false
 
 usecases:

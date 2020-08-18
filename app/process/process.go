@@ -124,7 +124,7 @@ func RunProcess(file string) {
 				panic(err)
 			}
 
-			if tp.MessageBroker {
+			if tp.Consumer {
 				dir = fmt.Sprintf("../../../../%s/backend/controller/consumer", tp.PackagePath)
 				if err := os.MkdirAll(dir, 0777); err != nil {
 					panic(err)
@@ -143,7 +143,7 @@ func RunProcess(file string) {
 			// 	basic(&tp, templateFile, outputFile, tp, 0664)
 			// }
 
-			if tp.MessageBroker {
+			if tp.Consumer {
 				templateFile := "../templates/backend/controller/consumer/consumer._go"
 				outputFile := fmt.Sprintf("../../../../%s/backend/controller/consumer/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
@@ -161,14 +161,14 @@ func RunProcess(file string) {
 
 		// REAL
 		{
-			dir := fmt.Sprintf("../../../../%s/backend/datasource/real", tp.PackagePath)
+			dir := fmt.Sprintf("../../../../%s/backend/datasource/production", tp.PackagePath)
 			if err := os.MkdirAll(dir, 0777); err != nil {
 				panic(err)
 			}
 
 			{
-				templateFile := "../templates/backend/datasource/real/datasource._go"
-				outputFile := fmt.Sprintf("../../../../%s/backend/datasource/real/%s.go", tp.PackagePath, SnakeCase(usecase.Name))
+				templateFile := "../templates/backend/datasource/production/datasource._go"
+				outputFile := fmt.Sprintf("../../../../%s/backend/datasource/production/%s_outport.go", tp.PackagePath, SnakeCase(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
@@ -322,7 +322,7 @@ func RunProcess(file string) {
 
 		}
 
-		generateMock(tp.PackagePath, usecase.Name)
+		// generateMock(tp.PackagePath, usecase.Name)
 
 	}
 
@@ -355,6 +355,29 @@ func RunProcess(file string) {
 
 	goGet()
 
+	gitCommit()
+
+}
+
+func gitCommit() {
+	x := "git --git-dir $GOPATH/src/github.com/mirzaakhena/accounting/.git log"
+	runcmd(x, false)
+}
+
+func runcmd(cmd string, shell bool) []byte {
+	if shell {
+		out, err := exec.Command("bash", "-c", cmd).Output()
+		if err != nil {
+			log.Fatal(err)
+			panic("some error found")
+		}
+		return out
+	}
+	out, err := exec.Command(cmd).Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return out
 }
 
 func generateMock(packagePath, usecaseName string) {

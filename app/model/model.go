@@ -6,26 +6,32 @@ type ThePackage struct {
 	PackagePath     string       `yaml:"packagePath"` // golang path of application
 	Usecases        []TheUsecase `yaml:"usecases"`    // list of usecases
 	RestAPI         bool         `yaml:"restapi"`
-	MessageBroker   bool         `yaml:"messagebroker"`
+	Consumer        bool         `yaml:"consumer"`
 }
 
 // TheUsecase is
 type TheUsecase struct {
-	Name     string       `yaml:"name"`     // name of usecase
-	Outports []TheOutport `yaml:"outports"` // name of usecase
-	Inport   TheInport    `yaml:"inport"`   // name of usecase
-	Ignore   bool         `yaml:"ignore"`
+	Name             string       `yaml:"name"`             //
+	Inport           TheInport    `yaml:"inport"`           //
+	Outports         []TheOutport `yaml:"outports"`         //
+	Ignore           bool         `yaml:"ignore"`           //
+	IgnoreBinder     bool         `yaml:"ignoreBinder"`     //
+	IgnoreInteractor bool         `yaml:"ignoreInteractor"` //
+	IgnoreDatasource bool         `yaml:"ignoreDatasource"` //
+	IgnoreController bool         `yaml:"ignoreController"` //
 }
 
 // TheInport is
 type TheInport struct {
+	Ignore         bool     `yaml:"ignore"`         //
 	RequestFields  []string `yaml:"requestFields"`  //
 	ResponseFields []string `yaml:"responseFields"` //
 }
 
 // TheOutport is
 type TheOutport struct {
-	Name           string   `yaml:"name"`           // name of outport
+	Name           string   `yaml:"name"`           //
+	Ignore         bool     `yaml:"ignore"`         //
 	RequestFields  []string `yaml:"requestFields"`  //
 	ResponseFields []string `yaml:"responseFields"` //
 }
