@@ -24,12 +24,12 @@ func controllerPart(tp model.ThePackage, usecase model.TheUsecase) {
 	{
 		templateFile := "../templates/backend/controller/restapi/restapi._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 
 	{
 		templateFile := "../templates/backend/controller/consumer/consumer._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/controller/consumer/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 }

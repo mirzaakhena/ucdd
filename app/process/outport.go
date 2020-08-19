@@ -17,6 +17,6 @@ func outportPart(tp model.ThePackage, usecase model.TheUsecase) {
 	{
 		templateFile := "../templates/backend/usecase/usecasesname/outport/outport._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/outport.go", tp.PackagePath, strings.ToLower(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 }

@@ -20,13 +20,13 @@ func interactorPart(tp model.ThePackage, usecase model.TheUsecase) {
 	{
 		templateFile := "../templates/backend/usecase/usecasesname/interactor/interactor._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/interactor.go", tp.PackagePath, strings.ToLower(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 
 	{
 		templateFile := "../templates/backend/usecase/usecasesname/interactor/interactor_test._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor/normal_test.go", tp.PackagePath, strings.ToLower(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 
 }

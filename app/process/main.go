@@ -16,6 +16,6 @@ func mainPart(tp model.ThePackage) {
 	{
 		templateFile := "../templates/backend/app/main._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/app/main.go", tp.PackagePath)
-		basic(&tp, templateFile, outputFile, tp, 0664)
+		writeFile(&tp, templateFile, outputFile, tp, 0664)
 	}
 }

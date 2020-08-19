@@ -17,7 +17,7 @@ func datasourcePart(tp model.ThePackage, usecase model.TheUsecase) {
 	{
 		templateFile := "../templates/backend/datasource/production/datasource._go"
 		outputFile := fmt.Sprintf("../../../../%s/backend/datasource/production/%s_outport.go", tp.PackagePath, SnakeCase(usecase.Name))
-		basic(&tp, templateFile, outputFile, usecase, 0664)
+		writeFile(&tp, templateFile, outputFile, usecase, 0664)
 	}
 
 	{
