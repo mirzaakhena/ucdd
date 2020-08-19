@@ -55,3 +55,13 @@ usecases:
         partialUpdateThis: false
         requestFields: [TenantID, Code, Name, Level, Side, HasChild]
         responseFields: [AccountID]
+
+  - name: CreateSubAccount
+    inport:
+    outports:
+      - name: SaveSubAccount
+
+  - name: CreateJournal
+    inport:
+    outports:
+      - name: SaveJournal

@@ -12,7 +12,7 @@ import (
 	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
 
 	datasource "{{PackagePath}}/backend/datasource/production"
-	usecase "{{PackagePath}}/backend/usecase/createaccount/interactor"
+	usecase "{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/interactor"
 )
 
 // {{PascalCase .Name}} ...
