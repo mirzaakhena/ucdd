@@ -1,60 +1,57 @@
 packagePath: github.com/mirzaakhena/accounting
 
+ignoreAll: false
+
 usecases:
-  #----------------------------
   - name: CreateAccount
-    ignoreThis: true
-    ignoreTest: true
-    ignoreBinder: true
-    ignoreInteractor: true
     defaultDatasource: production
+    partialUpdateThis: false
+    partialUpdateTest: false
+    partialUpdateBinder: false
+    partialUpdateInteractor: false
 
     datasources:
       - name: production
-        ignoreThis: true
+        partialUpdateThis: false
 
       - name: testing
-        ignoreThis: true
+        partialUpdateThis: false
 
     controllers:
       - type: restapi
-        ignoreThis: true
+        partialUpdateThis: false
         framework: gin-gonic
 
-      - type: messaging
-        ignoreThis: true
+      - type: consumer
+        partialUpdateThis: false
         framework: rabbitmq
 
       - type: rpc
-        ignoreThis: true
+        partialUpdateThis: false
         framework: grpc
 
     inport:
-      ignoreThis: true
+      partialUpdateThis: false
       requestFields: [TenantID, Accounts]
       responseFields: []
 
     outports:
       - name: GetAccountByCode
-        ignoreThis: true
-        ignore: true
+        partialUpdateThis: false
         requestFields: [TenantID, Code]
         responseFields: [HasChild, Side, Level]
 
       - name: HasSameCode
-        ignoreThis: true
-        ignore: true
+        partialUpdateThis: false
         requestFields: [TenantID, Level, Code]
         responseFields: [YesItHas]
 
       - name: HasSameName
-        ignoreThis: true
-        ignore: true
+        partialUpdateThis: false
         requestFields: [TenantID, Level, Name]
         responseFields: [YesItHas]
 
       - name: SaveAccount
-        ignoreThis: true
-        ignore: true
+        partialUpdateThis: false
         requestFields: [TenantID, Code, Name, Level, Side, HasChild]
         responseFields: [AccountID]

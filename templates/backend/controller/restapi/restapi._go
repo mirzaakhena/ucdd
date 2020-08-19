@@ -11,7 +11,7 @@ import (
 	"{{PackagePath}}/backend/shared/log"
 	"{{PackagePath}}/backend/usecase/{{LowerCase .Name}}/inport"
 
-	datasource "{{PackagePath}}/backend/datasource/real"
+	datasource "{{PackagePath}}/backend/datasource/production"
 	usecase "{{PackagePath}}/backend/usecase/createaccount/interactor"
 )
 

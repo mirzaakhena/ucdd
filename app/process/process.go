@@ -36,12 +36,12 @@ func RunProcess(file string) {
 
 	for _, usecase := range tp.Usecases {
 
-		if usecase.Ignore {
+		if tp.IgnoreAll && !usecase.PartialUpdateThis {
 			continue
 		}
 
 		// INPORT
-		{
+		if !tp.IgnoreAll || (tp.IgnoreAll && usecase.Inport.PartialUpdateThis) {
 			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/inport", tp.PackagePath, strings.ToLower(usecase.Name))
 			if err := os.MkdirAll(dir, 0777); err != nil {
 				panic(err)
@@ -69,7 +69,7 @@ func RunProcess(file string) {
 		}
 
 		// INTERACTOR
-		{
+		if !tp.IgnoreAll || (tp.IgnoreAll && usecase.PartialUpdateInteractor) {
 			dir := fmt.Sprintf("../../../../%s/backend/usecase/%s/interactor", tp.PackagePath, strings.ToLower(usecase.Name))
 			if err := os.MkdirAll(dir, 0777); err != nil {
 				panic(err)
@@ -122,7 +122,7 @@ func RunProcess(file string) {
 				panic(err)
 			}
 
-			if tp.Consumer {
+			{
 				dir = fmt.Sprintf("../../../../%s/backend/controller/consumer", tp.PackagePath)
 				if err := os.MkdirAll(dir, 0777); err != nil {
 					panic(err)
@@ -135,13 +135,7 @@ func RunProcess(file string) {
 				basic(&tp, templateFile, outputFile, usecase, 0664)
 			}
 
-			// {
-			// 	templateFile := "../templates/backend/controller/restapi/request._http"
-			// 	outputFile := fmt.Sprintf("../../../../%s/backend/controller/restapi/request.http", tp.PackagePath)
-			// 	basic(&tp, templateFile, outputFile, tp, 0664)
-			// }
-
-			if tp.Consumer {
+			{
 				templateFile := "../templates/backend/controller/consumer/consumer._go"
 				outputFile := fmt.Sprintf("../../../../%s/backend/controller/consumer/%s.go", tp.PackagePath, strings.ToLower(usecase.Name))
 				basic(&tp, templateFile, outputFile, usecase, 0664)
@@ -320,11 +314,9 @@ func RunProcess(file string) {
 
 		}
 
-		// generateMock(tp.PackagePath, usecase.Name)
+		generateMock(tp.PackagePath, usecase.Name)
 
 	}
-
-	fmt.Printf(">>>>> done Run\n")
 
 	goFormat(tp.PackagePath)
 
@@ -332,15 +324,15 @@ func RunProcess(file string) {
 
 }
 
-// func generateMock(packagePath, usecaseName string) {
-// 	fmt.Printf("mockery %s", usecaseName)
-// 	cmd := exec.Command("mockery", "-all", "-case", "snake", "-output", fmt.Sprintf("../../../../%s/backend/datasource/mocks/", packagePath), "-dir", fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/", packagePath, strings.ToLower(usecaseName)))
-// 	cmd.Stdout = os.Stdout
-// 	cmd.Stderr = os.Stderr
-// 	if err := cmd.Run(); err != nil {
-// 		log.Fatalf("cmd.Run() failed with %s\n", err)
-// 	}
-// }
+func generateMock(packagePath, usecaseName string) {
+	fmt.Printf("mockery %s", usecaseName)
+	cmd := exec.Command("mockery", "-all", "-case", "snake", "-output", fmt.Sprintf("../../../../%s/backend/datasource/mocks/", packagePath), "-dir", fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/", packagePath, strings.ToLower(usecaseName)))
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+}
 
 // do go format
 func goFormat(path string) {
