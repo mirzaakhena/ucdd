@@ -34,8 +34,6 @@ func RunProcess(file string) {
 		tp.ApplicationName = s[len(s)-1]
 	}
 
-	// fmt.Printf("%v\n", utils.GetJSON(tp))
-
 	for _, usecase := range tp.Usecases {
 
 		if usecase.Ignore {
@@ -326,69 +324,23 @@ func RunProcess(file string) {
 
 	}
 
-	// single directory generated
-	{
-		// makeBackendDirectory(&tp)
-		// makeFrontendDirectory(&tp)
-	}
-
-	// // single static file generated
-	// {
-	// 	createStaticBackendFile(&tp)
-	// 	createStaticFrontendFile(&tp)
-	// }
-
-	// // multiple generated file for entity
-	// for _, et := range tp.Entities {
-	// 	createDynamicBackendFile(&tp, &et)
-	// 	createDynamicFrontendFile(&tp, &et)
-	// }
-
-	// // multiple generated file for enum
-	// for _, en := range tp.Enums {
-	// 	createEnumFile(&tp, &en)
-	// }
-
-	// fmt.Printf(">>>>> done Run\n")
+	fmt.Printf(">>>>> done Run\n")
 
 	goFormat(tp.PackagePath)
 
 	goGet()
 
-	gitCommit()
-
 }
 
-func gitCommit() {
-	x := "git --git-dir $GOPATH/src/github.com/mirzaakhena/accounting/.git log"
-	runcmd(x, false)
-}
-
-func runcmd(cmd string, shell bool) []byte {
-	if shell {
-		out, err := exec.Command("bash", "-c", cmd).Output()
-		if err != nil {
-			log.Fatal(err)
-			panic("some error found")
-		}
-		return out
-	}
-	out, err := exec.Command(cmd).Output()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return out
-}
-
-func generateMock(packagePath, usecaseName string) {
-	fmt.Printf("mockery %s", usecaseName)
-	cmd := exec.Command("mockery", "-all", "-case", "snake", "-output", fmt.Sprintf("../../../../%s/backend/datasource/mocks/", packagePath), "-dir", fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/", packagePath, strings.ToLower(usecaseName)))
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
-	}
-}
+// func generateMock(packagePath, usecaseName string) {
+// 	fmt.Printf("mockery %s", usecaseName)
+// 	cmd := exec.Command("mockery", "-all", "-case", "snake", "-output", fmt.Sprintf("../../../../%s/backend/datasource/mocks/", packagePath), "-dir", fmt.Sprintf("../../../../%s/backend/usecase/%s/outport/", packagePath, strings.ToLower(usecaseName)))
+// 	cmd.Stdout = os.Stdout
+// 	cmd.Stderr = os.Stderr
+// 	if err := cmd.Run(); err != nil {
+// 		log.Fatalf("cmd.Run() failed with %s\n", err)
+// 	}
+// }
 
 // do go format
 func goFormat(path string) {
